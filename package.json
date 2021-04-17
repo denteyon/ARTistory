@@ -6,9 +6,13 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@tensorflow-models/mobilenet": "^2.0.4",
+    "@tensorflow/tfjs": "^1.2.10",
+    "@tensorflow/tfjs-node": "^1.2.10",
     "cookie-parser": "~1.4.4",
     "crypto-js": "^3.1.9-1",
     "debug": "~2.6.9",
+    "deepai": "^1.0.17",
     "ejs": "~2.6.1",
     "elliptic": "^6.4.0",
     "express": "~4.16.1",
