@@ -4,8 +4,20 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const Blockchain = require('./blockchain');
+const P2pServer = require('./p2p-server');
+const Wallet = require('./wallet');
+const TransactionPool = require('./wallet/transaction-pool');
+const Miner = require('./miner');
+
 var indexRouter = require('./routes/index');
 var imageRouter = require('./routes/images');
+
+const bc = new Blockchain();
+const wallet = new Wallet();
+const tp = new TransactionPool();
+const p2pServer = new P2pServer(bc, tp);
+const miner = new Miner(bc, tp, wallet, p2pServer);
 
 var app = express();
 var port = 3000;
@@ -41,6 +53,8 @@ app.use(function(err, req, res, next) {
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
-})
+});
+
+p2pServer.listen();
 
 module.exports = app;
