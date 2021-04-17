@@ -1,8 +1,9 @@
 var express = require('express');
 const multer = require('multer');
 var router = express.Router();
+var path = require('path');
+var fs = require('fs');
 
-const upload = multer({dest: __dirname + '/uploads/images'});
 var checksum = require('./../util/checksum');
 var Art = require('../models/art');
 
@@ -19,15 +20,35 @@ const tp = new TransactionPool();
 const p2pServer = new P2pServer(bc, tp);
 const miner = new Miner(bc, tp, wallet, p2pServer);
 
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, __dirname + '/../machinelearning/uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname) //Appending extension
+  }
+})
+
+var upload = multer({ storage: storage });
+
 /* GET users listing. */
-router.post('/addImg', function(req, res, next) {
+router.post('/addImg', function (req, res, next) {
   var imgChecksum = checksum.generateChecksum('img.jpg');
   res.send('get checksum and add it to blockchain');
 });
 
 router.post('/upload', upload.single('artwork'), (req, res) => {
-  if(req.file) {
-      res.json(req.file);
+  if (req.file) {
+    var author = req.body.author;
+    var filename = req.file.originalname;
+    // fs.readFileSync(filepath, function(err, data) {
+    var img = fs.readFileSync(req.file.path);
+    let str = img.toString('base64')
+    data = Buffer.from(str, 'base64');
+    var imgChecksum = checksum.generateChecksum(data);
+    res.send(author + ' ' + filename + ' ' + imgChecksum)
+
+    // });
   }
   else throw 'error';
 });
@@ -44,8 +65,8 @@ router.get('/transact', (req, res) => {
       author: req.body.author,
       checksum: req.body.image // calculate checksum here
     }
-);
-  
+  );
+
   const transaction = wallet.createTransaction(recipient, art, bc, tp);
   p2pServer.broadcastTransaction(transaction);
   res.redirect('transactions');
@@ -55,7 +76,7 @@ router.get('/transactions', (req, res) => {
   res.json(tp.transactions);
 });
 
-router.get('/checkImg', function(req, res, next) {
+router.get('/checkImg', function (req, res, next) {
   res.send('find similarity and if match, go check the blockchain');
 })
 
