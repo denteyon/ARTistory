@@ -1,6 +1,8 @@
 var express = require('express');
+const multer = require('multer');
 var router = express.Router();
 
+const upload = multer({dest: __dirname + '/uploads/images'});
 var checksum = require('./../util/checksum');
 var Art = require('../models/art');
 
@@ -21,6 +23,13 @@ const miner = new Miner(bc, tp, wallet, p2pServer);
 router.post('/addImg', function(req, res, next) {
   var imgChecksum = checksum.generateChecksum('img.jpg');
   res.send('get checksum and add it to blockchain');
+});
+
+router.post('/upload', upload.single('artwork'), (req, res) => {
+  if(req.file) {
+      res.json(req.file);
+  }
+  else throw 'error';
 });
 
 router.get('/blocks', (req, res) => {
