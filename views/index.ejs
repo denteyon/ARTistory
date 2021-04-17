@@ -1,20 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <form method="POST" action="image/upload" enctype="multipart/form-data">
-      <div>
-          <label>Select your profile picture:</label>
-          <input type="file" name="artwork" />
-      </div>
-      <div>
-          <input type="submit" name="btn_upload_image" value="Upload" />
-      </div>
-    </form>
-  </body>
+<head>
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+<h1><%= title %></h1>
+<p>Welcome to <%= title %></p>
+<form method="POST" action="image/upload" enctype="multipart/form-data">
+  <div>
+    <label>Upload your artwork:</label>
+    <input type="file" name="artwork" />
+  </div>
+  <div>
+    <input type="submit" name="btn_upload_image" value="Upload" />
+  </div>
+</form>
+<form method="POST" action="image/check" enctype="multipart/form-data">
+  <div>
+    <label>Check the artwork:</label>
+    <input type="file" name="artwork" />
+  </div>
+  <div>
+    <input type="submit" name="btn_upload_image" value="Check" />
+  </div>
+</form>
+</body>
 </html>
