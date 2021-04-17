@@ -10,4 +10,4 @@ function generateChecksum(file, algorithm, encoding) {
     });
 }
 
-module.exports = checksum;
+exports.generateChecksum = generateChecksum;
