@@ -2,11 +2,14 @@ var express = require('express');
 var router = express.Router();
 
 var checksum = require('./../util/checksum');
+var Art = require('../models/art');
+
 const Blockchain = require('../blockchain');
 const TransactionPool = require('../wallet/transaction-pool');
 const Wallet = require('../wallet');
 const P2pServer = require('../p2p-server');
 const Miner = require('../miner');
+const { TooManyRequests } = require('http-errors');
 
 const bc = new Blockchain();
 const wallet = new Wallet();
@@ -26,10 +29,15 @@ router.get('/blocks', (req, res) => {
 
 router.get('/transact', (req, res) => {
   // const { recipient, amount } = req.body;
-  let recipient = 'server';
-  let amount = '400';
+  var art = new Art(
+    {
+      title: req.body.title,
+      author: req.body.author,
+      checksum: req.body.image // calculate checksum here
+    }
+);
   
-  const transaction = wallet.createTransaction(recipient, amount, bc, tp);
+  const transaction = wallet.createTransaction(recipient, art, bc, tp);
   p2pServer.broadcastTransaction(transaction);
   res.redirect('transactions');
 });
