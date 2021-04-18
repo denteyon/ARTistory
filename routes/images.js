@@ -4,6 +4,7 @@ var express = require('express');
 const multer = require('multer');
 var router = express.Router();
 var path = require('path');
+var fs = require('fs');
 
 var checksum = require('./../util/checksum');
 var Art = require('../models/art');
@@ -80,7 +81,9 @@ router.post('/upload', upload.single('artwork'), (req, res) => {
 
           p2pServer.syncChains();
 
-          res.render('upload', { title: TITLE, artworktitle: title, artworkauthor: author});
+          var bitmap = fs.readFileSync(req.file.path)
+
+          res.render('upload', { img: Buffer.from(bitmap).toString('base64'), title: TITLE, artworktitle: title, artworkauthor: author});
         });
       }
     });
