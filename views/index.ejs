@@ -9,12 +9,16 @@
     <p>Welcome to <%= title %></p>
     <form method="POST" action="image/upload" enctype="multipart/form-data">
       <div>
-          <label>Select your profile picture:</label>
+          <label>Select your artwork:</label>
           <input type="file" name="artwork" />
       </div>
       <div>
-        <label>Select your profile picture:</label>
+        <label>Author: </label>
         <input type="text" name="author" />
+      </div>
+      <div>
+        <label>Artwork Title: </label>
+        <input type="text" name="title" />
       </div>
       <div>
           <input type="submit" name="btn_upload_image" value="Upload" />

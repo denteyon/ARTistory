@@ -41,14 +41,9 @@ router.post('/upload', upload.single('artwork'), (req, res) => {
   if (req.file) {
     var author = req.body.author;
     var filename = req.file.originalname;
-    // fs.readFileSync(filepath, function(err, data) {
-    var img = fs.readFileSync(req.file.path);
-    let str = img.toString('base64')
-    data = Buffer.from(str, 'base64');
-    var imgChecksum = checksum.generateChecksum(data);
-    res.send(author + ' ' + filename + ' ' + imgChecksum)
-
-    // });
+    
+    var imgChecksum = checksum.generateChecksum(req.file.path);
+    res.send(author + ' ' + filename + ' ' + imgChecksum);
   }
   else throw 'error';
 });
