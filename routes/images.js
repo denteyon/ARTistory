@@ -24,7 +24,7 @@ const miner = new Miner(bc, tp, wallet, p2pServer);
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, __dirname + '/../app/machinelearning/uploads')
+    cb(null, '/../machinelearning/uploads')
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname) //Appending extension
