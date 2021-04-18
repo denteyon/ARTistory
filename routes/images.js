@@ -24,7 +24,7 @@ const miner = new Miner(bc, tp, wallet, p2pServer);
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, __dirname + '/../machinelearning/uploads')
+    cb(null, __dirname + '/machinelearning/uploads')
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname) //Appending extension
@@ -33,7 +33,7 @@ var storage = multer.diskStorage({
 
 var cache = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, __dirname + '/../machinelearning/cache')
+    cb(null, __dirname + '/machinelearning/cache')
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname) //Appending extension
@@ -42,7 +42,7 @@ var cache = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 var check = multer({ storage: cache });
-const uploadedPath = path.join(__dirname, '../machinelearning/uploads/');
+const uploadedPath = path.join(__dirname, '../../machinelearning/uploads/');
 
 router.post('/upload', upload.single('artwork'), (req, res) => {
   if (req.file) {
