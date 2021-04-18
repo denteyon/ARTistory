@@ -13,6 +13,7 @@ const Wallet = require('../wallet');
 const P2pServer = require('../p2p-server');
 const Miner = require('../miner');
 const { TooManyRequests } = require('http-errors');
+const deepAI = require('../machinelearning/deepai_classification');
 
 const bc = new Blockchain();
 const wallet = new Wallet();
@@ -30,6 +31,17 @@ var storage = multer.diskStorage({
 })
 
 var upload = multer({ storage: storage });
+
+var cache = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, __dirname + '/../machinelearning/cache')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname) //Appending extension
+  }
+})
+
+var check = multer({ storage: cache });
 
 /* GET users listing. */
 router.post('/addImg', function (req, res, next) {
@@ -113,5 +125,13 @@ router.get('/blocks', (req, res) => {
 router.get('/checkImg', function (req, res, next) {
   res.send('find similarity and if match, go check the blockchain');
 })
+
+router.post('/check', check.single('checkImg'), async (req, res) => {
+  if (req.file) {
+    var result = await deepAI.classify(req.file.path);
+    await res.send(result);
+  }
+  else throw 'error';
+});
 
 module.exports = router;
