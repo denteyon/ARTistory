@@ -12,18 +12,24 @@ async function classify(checkImg) {
 
     var min = 100;
 
-    for (const file of filenames) {
+    var resultPercentage = 0;
+    var resultFilename = "";
+
+    for (const filename of filenames) {
         const resp = await deepai.callStandardApi("image-similarity", {
-            image1: fs.createReadStream(uploadedPath + file),
+            image1: fs.createReadStream(uploadedPath + filename),
             image2: fs.createReadStream(checkImg),
         })
 
         if (resp.output.distance < min) {
             min = resp.output.distance;
+            resultFilename = filename;
         }
     }
 
-    return min.toString();
+    resultPercentage = 100 - min;
+
+    return [resultFilename, resultPercentage];
 }
 
 exports.classify = classify;
