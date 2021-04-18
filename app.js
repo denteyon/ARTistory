@@ -13,7 +13,6 @@ var imageRouter = require('./routes/images');
 
 // Set up mongoose connection
 var mongoose = require('mongoose');
-var dev_db_url = 'mongodb+srv://denteyon:artwork@cluster0.lkrvm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 var mongoDB = process.env.MONGODB_URI || dev_db_url;
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.Promise = global.Promise;
