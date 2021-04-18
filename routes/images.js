@@ -53,16 +53,30 @@ router.post('/upload', upload.single('artwork'), (req, res) => {
     artwork.save(function (err) {
       if (err) return err;
 
-      Art.find({ name: 'www'}, function (err, docs) {
-        if (err){
-            console.log(err);
-        }
-        else{
-            console.log("First function call : ", docs);
-        }
-    });
+      var recipient = 'server'
+
+      const transaction = wallet.createTransaction(recipient, artwork, bc, tp);
+      p2pServer.broadcastTransaction(transaction);
+
+      console.log(tp.transactions);
+
+      const block = bc.addBlock(artwork);
+      console.log(`New block added: ${block.toString()}`);
+
+      p2pServer.syncChains();
+
+      res.redirect('blocks');
+
+      //   Art.findOne({ name: 'www'}, function (err, docs) {
+      //     if (err){
+      //         console.log(err);
+      //     }
+      //     else{
+      //         console.log("First function call : ", docs);
+      //     }
+      // });
       //artwork now exists
-      res.send(author + ' ' + filename + ' ' + imgChecksum);
+      // res.send(author + ' ' + filename + ' ' + imgChecksum);
     });
   }
   else throw 'error';
@@ -72,24 +86,29 @@ router.get('/blocks', (req, res) => {
   res.json(bc.chain);
 });
 
-router.get('/transact', (req, res) => {
-  // const { recipient, amount } = req.body;
-  var art = new Art(
-    {
-      title: req.body.title,
-      author: req.body.author,
-      checksum: req.body.image // calculate checksum here
-    }
-  );
+// router.get('/transact', (req, res) => {
+// const { recipient, amount } = req.body;
+//   var art = new Art(
+//     {
+//       title: req.body.title,
+//       author: req.body.author,
+//       checksum: req.body.image // calculate checksum here
+//     }
+//   );
 
-  const transaction = wallet.createTransaction(recipient, art, bc, tp);
-  p2pServer.broadcastTransaction(transaction);
-  res.redirect('transactions');
+//   const transaction = wallet.createTransaction(recipient, art, bc, tp);
+//   p2pServer.broadcastTransaction(transaction);
+//   res.redirect('transactions');
+// }); 
+
+
+router.get('/blocks', (req, res) => {
+  res.json(bc.chain);
 });
 
-router.get('/transactions', (req, res) => {
-  res.json(tp.transactions);
-});
+// router.post('/mine', (req, res) => {
+
+// });
 
 router.get('/checkImg', function (req, res, next) {
   res.send('find similarity and if match, go check the blockchain');
