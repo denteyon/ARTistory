@@ -8,7 +8,7 @@
 
   <body>
     <header>
-      <div class="jumbotron">
+      <div class="jumbotron" style="background-color:coral">
         <h1><%= title %></h1>
         <p>Welcome to <%= title %></p>
       </div>
@@ -18,18 +18,18 @@
       <div class="row align-items-md-stretch">
         <div class="col-md-6">
           <div class="jumbotron text-white bg-dark">
-            <form method="POST" action="image/upload" enctype="multipart/form-data">
+            <form name= "upload_form" method="POST" action="image/upload" enctype="multipart/form-data">
               <div>
                 <label class=""><em>Upload your own artwork:</em></label>
-                <input type="file" name="artwork" />
+                <input type="file" name="artwork" required/>
               </div>
               <div>
                 <label><em>Author Name:</em></label>
-                <input type="text" name="author" />
+                <input type="text" name="author" required/>
               </div>
               <div>
                 <label><em>Artwork Title:</em></label>
-                <input type="text" name="title" />
+                <input type="text" name="title" required/>
               </div>
               <div>
                 <input class="btn btn-outline-light" type="submit" name="btn_upload_image" value="UPLOAD" />
@@ -43,7 +43,7 @@
             <form method="POST" action="image/check" enctype="multipart/form-data">
               <div>
                 <label><em>Check an artwork:</em></label>
-                <input type="file" name="checkImg" />
+                <input type="file" name="checkImg" required/>
               </div>
               <div>
                 <input class="btn btn-outline-light" type="submit" name="btn_check_image" value="CHECK" />
@@ -58,4 +58,24 @@
       <p class="text-center text-muted">© Copyright <script>document.write(new Date().getFullYear());</script> <%= title %></p>
     </footer>
   </body>
+
+<script>
+  function validateForm() {
+    var x = document.forms["upload_form"]["artwork"].value;
+    var y = document.forms["upload_form"]["author"].value;
+    var z = document.forms["upload_form"]["title"].value;
+    if (x) {
+      alert("Artwork must be uploaded.");
+      return false;
+    }
+    if (y == "") {
+      alert("Author name must be filled out.");
+      return false;
+    }
+    if (z == "") {
+      alert("Artwork title must be filled out.");
+      return false;
+    }
+  }
+</script>
 </html>
