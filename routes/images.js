@@ -40,10 +40,30 @@ router.post('/addImg', function (req, res, next) {
 router.post('/upload', upload.single('artwork'), (req, res) => {
   if (req.file) {
     var author = req.body.author;
+    var title = req.body.title;
     var filename = req.file.originalname;
-    
     var imgChecksum = checksum.generateChecksum(req.file.path);
-    res.send(author + ' ' + filename + ' ' + imgChecksum);
+
+    var artwork = new Art({
+      title: title,
+      author: author,
+      checksum: imgChecksum
+    });
+
+    artwork.save(function (err) {
+      if (err) return err;
+
+      Art.find({ name: 'www'}, function (err, docs) {
+        if (err){
+            console.log(err);
+        }
+        else{
+            console.log("First function call : ", docs);
+        }
+    });
+      //artwork now exists
+      res.send(author + ' ' + filename + ' ' + imgChecksum);
+    });
   }
   else throw 'error';
 });
