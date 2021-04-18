@@ -73,13 +73,14 @@ router.post('/upload', upload.single('artwork'), (req, res) => {
       console.log(tp.transactions);
 
       const block = bc.addBlock(artwork);
+
       console.log(`New block added: ${block.toString()}`);
 
       p2pServer.syncChains();
 
       res.redirect('blocks');
 
-      //   Art.findOne({ name: 'www'}, function (err, docs) {
+      //   Art.findOne({ checksum: 'www'}, function (err, docs) {
       //     if (err){
       //         console.log(err);
       //     }
@@ -96,6 +97,16 @@ router.post('/upload', upload.single('artwork'), (req, res) => {
 
 router.get('/blocks', (req, res) => {
   res.json(bc.chain);
+});
+
+router.get('/getBlock', (req, res) => {
+  var desc = JSON.parse(bc.chain).find(function(item) {
+    return data.checksum == req.body.checksum;
+  })
+  
+  if(desc) {
+    console.log(desc);
+  }
 });
 
 // router.get('/transact', (req, res) => {
