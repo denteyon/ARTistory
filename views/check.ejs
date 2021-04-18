@@ -9,16 +9,27 @@
 <body>
 <header>
     <div class="jumbotron">
-        <h1><%= title %></h1>
+        <h1>Check Result</h1>
     </div>
 </header>
 
 <main>
-    <div class="jumbotron text-white bg-dark">
-        <h4>Result</h4>
-        <p>Similarity Percentage: <%= resultpercentage %>%</p>
-        <p>Title: <%= artworktitle %></p>
-        <p>Author: <%= artworkauthor %></p>
+    <div class="row align-items-md-stretch">
+        <div class="col-md-6">
+            <div class="jumbotron text-white bg-dark">
+                <p><b>The image you are checking:</b></p>
+                <img src="data:image/png;base64, <%= img_check %>" alt="artwork">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="jumbotron text-white bg-dark">
+                <p><b>Artwork in our blockchain:</b></p>
+                <p><em>Similarity Percentage:</em> <%= resultpercentage %>%</p>
+                <p><em>Title:</em> <%= artworktitle %></p>
+                <p><em>Author:</em> <%= artworkauthor %></p>
+                <p><em>Artwork:</em> <img src="data:image/png;base64, <%= img_upload %>" alt="artwork"></p>
+            </div>
+        </div>
     </div>
 </main>
 

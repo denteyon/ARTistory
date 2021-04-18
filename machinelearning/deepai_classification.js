@@ -5,7 +5,7 @@ const uploadedPath = path.join(__dirname, 'uploads/');
 
 const deepai = require('deepai');
 
-deepai.setApiKey('155a287f-a64d-45cc-a811-7973b39ee8c6'); // May need to change
+deepai.setApiKey('be7ff4a9-4e9a-440f-83c7-c3c7444be508'); // May need to change
 
 async function classify(checkImg) {
     var filenames = fs.readdirSync(uploadedPath);

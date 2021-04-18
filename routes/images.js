@@ -1,4 +1,4 @@
-const TITLE = 'DeepArtLedger';
+const TITLE = 'ARTistory';
 
 var express = require('express');
 const multer = require('multer');
@@ -81,9 +81,9 @@ router.post('/upload', upload.single('artwork'), (req, res) => {
 
           p2pServer.syncChains();
 
-          var bitmap = fs.readFileSync(req.file.path)
+          var bitmap = fs.readFileSync(req.file.path);
 
-          res.render('upload', { img: Buffer.from(bitmap).toString('base64'), title: TITLE, artworktitle: title, artworkauthor: author});
+          res.render('upload', {title: TITLE, artworktitle: title, artworkauthor: author, img: Buffer.from(bitmap).toString('base64')});
         });
       }
     });
@@ -110,7 +110,10 @@ router.post('/check', check.single('checkImg'), async (req, res) => {
     if (result[1] < 90) {
       res.render('warning', { title: TITLE, message: 'This artwork has not been registered in our blockchain yet.'});
     } else if (result[1] !== 100) {
-      res.render('check', { title: TITLE, resultpercentage: result[1], artworktitle: resultArtwork.title, artworkauthor: resultArtwork.author});
+      //res.render('check', { title: TITLE, resultpercentage: result[1], artworktitle: resultArtwork.title, artworkauthor: resultArtwork.author});
+      var bitmap_uploaded = fs.readFileSync(uploadedPath+result[0]);
+      var bitmap_check = fs.readFileSync(req.file.path);
+      res.render('check', {title: TITLE, resultpercentage: result[1], artworktitle: resultArtwork.title, artworkauthor: resultArtwork.author, img_upload: Buffer.from(bitmap_uploaded).toString('base64'), img_check: Buffer.from(bitmap_check).toString('base64')});
     } else {
       var imgChecksum = checksum.generateChecksum(uploadedPath + result[0]);
       var desc = bc.chain.find(function (item) {
@@ -121,7 +124,10 @@ router.post('/check', check.single('checkImg'), async (req, res) => {
         console.log(desc);
       }
 
-      res.render('check', { title: TITLE, resultpercentage: result[1], artworktitle: resultArtwork.title, artworkauthor: resultArtwork.author});
+      var bitmap_uploaded = fs.readFileSync(uploadedPath+result[0]);
+      var bitmap_check = fs.readFileSync(req.file.path);
+      res.render('check', {title: TITLE, resultpercentage: result[1], artworktitle: resultArtwork.title, artworkauthor: resultArtwork.author, img_upload: Buffer.from(bitmap_uploaded).toString('base64'), img_check: Buffer.from(bitmap_check).toString('base64')});
+      //res.render('check', { title: TITLE, resultpercentage: result[1], artworktitle: resultArtwork.title, artworkauthor: resultArtwork.author});
     }
   }
   else throw 'error';
