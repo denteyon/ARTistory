@@ -1,8 +1,9 @@
+const TITLE = 'DeepArtLedger';
+
 var express = require('express');
 const multer = require('multer');
 var router = express.Router();
 var path = require('path');
-var fs = require('fs');
 
 var checksum = require('./../util/checksum');
 var Art = require('../models/art');
@@ -29,8 +30,6 @@ var storage = multer.diskStorage({
   }
 })
 
-var upload = multer({ storage: storage });
-
 var cache = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, __dirname + '/../machinelearning/cache')
@@ -40,6 +39,7 @@ var cache = multer.diskStorage({
   }
 })
 
+var upload = multer({ storage: storage });
 var check = multer({ storage: cache });
 const uploadedPath = path.join(__dirname, '../machinelearning/uploads/');
 
@@ -62,7 +62,7 @@ router.post('/upload', upload.single('artwork'), (req, res) => {
         console.log(err);
       }
       if (docs) { // already exists
-        res.redirect('blocks');
+        res.render('warning', { title: TITLE, message: 'This artwork has already existed in our blockchain. It cannot be uploaded again.'});
       } else {
         artwork.save(function (err) {
           if (err) return err;
@@ -80,7 +80,7 @@ router.post('/upload', upload.single('artwork'), (req, res) => {
 
           p2pServer.syncChains();
 
-          res.redirect('blocks');
+          res.render('upload', { title: TITLE, artworktitle: title, artworkauthor: author});
         });
       }
     });
@@ -88,21 +88,12 @@ router.post('/upload', upload.single('artwork'), (req, res) => {
   else throw 'error';
 });
 
-router.get('/blocks', (req, res) => {
-  res.json(bc.chain);
-});
-
-
-router.get('/blocks', (req, res) => {
-  res.json(bc.chain);
-});
-
 router.post('/check', check.single('checkImg'), async (req, res) => {
   if (req.file) {
     var result = await deepAI.classify(req.file.path);
     var resultArtwork = null;
 
-    await Art.findOne({ filename: result.resultFilename }, function (err, docs) {
+    await Art.findOne({ filename: result[0] }, function (err, docs) {
       if (err) {
         console.log(err);
       }
@@ -113,25 +104,22 @@ router.post('/check', check.single('checkImg'), async (req, res) => {
       }
     });
 
-    console.log(result.resultPercentage);
-
-    if (result.resultPercentage < 90) {
-      res.send("Not registered");
-    } else if (result.resultPercentage !== 100) {
-      res.send(resultArtwork);
+    if (result[1] < 90) {
+      res.render('warning', { title: TITLE, message: 'This artwork has not been registered in our blockchain yet.'});
+    } else if (result[1] !== 100) {
+      res.render('check', { title: TITLE, resultpercentage: result[1], artworktitle: resultArtwork.title, artworkauthor: resultArtwork.author});
     } else {
-      console.log(uploadedPath + ' ' + result.resultFilename);
-      var imgChecksum = checksum.generateChecksum(uploadedPath + result.resultFilename);
-      var desc = JSON.parse(bc.chain).find(function (item) {
-        return item.data.checksum == imgChecksum;
+      var imgChecksum = checksum.generateChecksum(uploadedPath + result[0]);
+      var desc = bc.chain.find(function (item) {
+        return item.data.checksum === imgChecksum;
       })
-    
+
       if (desc) {
         console.log(desc);
       }
-    }
 
-    await res.send(result);
+      res.render('check', { title: TITLE, resultpercentage: result[1], artworktitle: resultArtwork.title, artworkauthor: resultArtwork.author});
+    }
   }
   else throw 'error';
 });

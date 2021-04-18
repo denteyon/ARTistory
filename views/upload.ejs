@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+<header>
+    <div class="jumbotron">
+        <h1><%= title %></h1>
+    </div>
+</header>
+
+<main>
+    <div class="jumbotron text-white bg-dark">
+        <p>Your artwork has been successfully uploaded!</p>
+        <p>Title: <%= artworktitle %></p>
+        <p>Author: <%= artworkauthor %></p>
+    </div>
+</main>
+
+<footer class="footer">
+    <p class="text-center text-muted">© Copyright <script>document.write(new Date().getFullYear());</script> <%= title %></p>
+</footer>
+</body>
+</html>

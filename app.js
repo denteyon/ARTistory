@@ -6,9 +6,7 @@ var logger = require('morgan');
 
 const Blockchain = require('./blockchain');
 const P2pServer = require('./p2p-server');
-const Wallet = require('./wallet');
 const TransactionPool = require('./wallet/transaction-pool');
-const Miner = require('./miner');
 
 var indexRouter = require('./routes/index');
 var imageRouter = require('./routes/images');
@@ -23,10 +21,8 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 const bc = new Blockchain();
-const wallet = new Wallet();
 const tp = new TransactionPool();
 const p2pServer = new P2pServer(bc, tp);
-const miner = new Miner(bc, tp, wallet, p2pServer);
 
 var app = express();
 var port = 3000;
