@@ -24,6 +24,7 @@ async function classify(checkImg) {
     for (const document of document_list) {
         var name = path.join(uploadedPath+'/'+document.filename);
         console.log(name);
+        console.log(checkImg);
 
         const resp = await deepai.callStandardApi("image-similarity", {
             image1: fs.createReadStream(name),
