@@ -115,11 +115,11 @@ router.post('/check', check.single('checkImg'), async (req, res) => {
       res.render('warning', { title: TITLE, message: 'This artwork has not been registered in our blockchain yet.'});
     } else if (result[1] !== 100) {
       //res.render('check', { title: TITLE, resultpercentage: result[1], artworktitle: resultArtwork.title, artworkauthor: resultArtwork.author});
-      var bitmap_uploaded = fs.readFileSync(uploadedPath+result[0]);
+      var bitmap_uploaded = fs.readFileSync(uploadedPath+'/'+result[0]);
       var bitmap_check = fs.readFileSync(req.file.path);
       res.render('check', {title: TITLE, resultpercentage: result[1], artworktitle: resultArtwork.title, artworkauthor: resultArtwork.author, img_upload: Buffer.from(bitmap_uploaded).toString('base64'), img_check: Buffer.from(bitmap_check).toString('base64')});
     } else {
-      var imgChecksum = checksum.generateChecksum(uploadedPath + result[0]);
+      var imgChecksum = checksum.generateChecksum(uploadedPath+ '/' + result[0]);
       var desc = bc.chain.find(function (item) {
         return item.data.checksum === imgChecksum;
       })
