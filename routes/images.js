@@ -16,7 +16,7 @@ const Wallet = require('../wallet');
 const P2pServer = require('../p2p-server');
 const Miner = require('../miner');
 const deepAI = require('../machinelearning/deepai_classification');
-const imagePath = path.join(os.tmpdir() + '/uploads');
+const imagePath = os.tmpdir();
 
 const bc = new Blockchain();
 const wallet = new Wallet();
@@ -49,10 +49,6 @@ const uploadedPath = imagePath;
 
 
 router.post('/upload', upload.single('artwork'), (req, res) => {
-  const dirPath = path.join(os.tmpdir() + '/uploads');
-  if (!fs.existsSync(dirPath)){
-    fs.mkdirSync(dirPath);
-  }
   if (req.file) {
     var author = req.body.author;
     var title = req.body.title;

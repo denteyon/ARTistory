@@ -1,36 +1,37 @@
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
+var Art = require('../models/art');
 
-
-
-const uploadedPath = path.join(os.tmpdir() + '/uploads');
+const uploadedPath = os.tmpdir();
 
 const deepai = require('deepai');
 
 deepai.setApiKey(process.env.DEEPAI_API_KEY); // May need to change
 
 async function classify(checkImg) {
-    var filenames = fs.readdirSync(uploadedPath);
+    const document_list = await Art.find();
 
-    console.log(filenames);
+    //var filenames = fs.readdirSync(uploadedPath);
+
+    console.log(document_list);
 
     var min = 100;
 
     var resultPercentage = 0;
     var resultFilename = "";
 
-    for (const filename of filenames) {
-        console.log(uploadedPath+'/'+filename);
+    for (const document of document_list) {
+        console.log(uploadedPath+'/'+document.filename);
 
         const resp = await deepai.callStandardApi("image-similarity", {
-            image1: fs.createReadStream(uploadedPath + '/' + filename),
+            image1: fs.createReadStream(uploadedPath + '/' + document.filename),
             image2: fs.createReadStream(checkImg),
         })
 
         if (resp.output.distance < min) {
             min = resp.output.distance;
-            resultFilename = filename;
+            resultFilename = document.filename;
         }
     }
 
