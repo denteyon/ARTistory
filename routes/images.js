@@ -51,7 +51,7 @@ const uploadedPath = imagePath;
 router.post('/upload', upload.single('artwork'), (req, res) => {
   const dirPath = path.join(os.tmpdir() + '/uploads');
   if (!fs.existsSync(dirPath)){
-    fs.mkdirSync(dir);
+    fs.mkdirSync(dirPath);
   }
   if (req.file) {
     var author = req.body.author;
