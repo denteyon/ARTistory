@@ -20,7 +20,7 @@ async function classify(checkImg) {
 
     for (const filename of filenames) {
         const resp = await deepai.callStandardApi("image-similarity", {
-            image1: fs.createReadStream(uploadedPath + filename),
+            image1: fs.createReadStream(uploadedPath + '/' + filename),
             image2: fs.createReadStream(checkImg),
         })
 
