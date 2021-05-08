@@ -4,7 +4,7 @@ const os = require('os');
 
 
 
-const uploadedPath = os.tmpdir();
+const uploadedPath = path.join(os.tmpdir() + '/uploads');
 
 const deepai = require('deepai');
 
@@ -21,7 +21,7 @@ async function classify(checkImg) {
     var resultFilename = "";
 
     for (const filename of filenames) {
-        Con
+        console.log(uploadedPath+'/'+filename);
 
         const resp = await deepai.callStandardApi("image-similarity", {
             image1: fs.createReadStream(uploadedPath + '/' + filename),

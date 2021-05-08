@@ -16,7 +16,7 @@ const Wallet = require('../wallet');
 const P2pServer = require('../p2p-server');
 const Miner = require('../miner');
 const deepAI = require('../machinelearning/deepai_classification');
-const imagePath = os.tmpdir();
+const imagePath = path.join(os.tmpdir() + '/uploads');
 
 const bc = new Blockchain();
 const wallet = new Wallet();
