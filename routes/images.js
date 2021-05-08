@@ -128,7 +128,7 @@ router.post('/check', check.single('checkImg'), async (req, res) => {
         console.log(desc);
       }
 
-      var bitmap_uploaded = fs.readFileSync(uploadedPath+result[0]);
+      var bitmap_uploaded = fs.readFileSync(uploadedPath+'/'+result[0]);
       var bitmap_check = fs.readFileSync(req.file.path);
       res.render('check', {title: TITLE, resultpercentage: result[1], artworktitle: resultArtwork.title, artworkauthor: resultArtwork.author, img_upload: Buffer.from(bitmap_uploaded).toString('base64'), img_check: Buffer.from(bitmap_check).toString('base64')});
       //res.render('check', { title: TITLE, resultpercentage: result[1], artworktitle: resultArtwork.title, artworkauthor: resultArtwork.author});
