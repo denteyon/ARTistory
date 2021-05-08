@@ -1,7 +1,10 @@
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 
-const uploadedPath = path.join(__dirname, 'uploads/');
+
+
+const uploadedPath = os.tmpdir();
 
 const deepai = require('deepai');
 
