@@ -5,6 +5,7 @@ const multer = require('multer');
 var router = express.Router();
 var path = require('path');
 var fs = require('fs');
+var os = require('os');
 
 var checksum = require('./../util/checksum');
 var Art = require('../models/art');
@@ -15,6 +16,7 @@ const Wallet = require('../wallet');
 const P2pServer = require('../p2p-server');
 const Miner = require('../miner');
 const deepAI = require('../machinelearning/deepai_classification');
+const imagePath = os.tmpdir();
 
 const bc = new Blockchain();
 const wallet = new Wallet();
@@ -24,7 +26,7 @@ const miner = new Miner(bc, tp, wallet, p2pServer);
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname + '/../machinelearning/uploads'))
+    cb(null, imagePath)
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname) //Appending extension
@@ -33,7 +35,7 @@ var storage = multer.diskStorage({
 
 var cache = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname + '/../machinelearning/cache'))
+    cb(null, imagePath)
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname) //Appending extension
@@ -42,7 +44,9 @@ var cache = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 var check = multer({ storage: cache });
-const uploadedPath = path.join(__dirname, '../../machinelearning/uploads/');
+// const uploadedPath = path.join(__dirname, '../../machinelearning/uploads/');
+const uploadedPath = imagePath;
+
 
 router.post('/upload', upload.single('artwork'), (req, res) => {
   if (req.file) {

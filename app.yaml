@@ -1,5 +1,4 @@
-runtime: custom # or another supported version
-env: flex
+runtime: nodejs14 # or another supported version
 
 instance_class: F2
 
