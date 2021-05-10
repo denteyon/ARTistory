@@ -3,8 +3,8 @@ runtime: nodejs14 # or another supported version
 instance_class: F2
 
 env_variables:
-  DEEPAI_API_KEY: "be7ff4a9-4e9a-440f-83c7-c3c7444be508"
-  MONGODB_URI: "mongodb+srv://denteyon:artwork@cluster0.lkrvm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+  DEEPAI_API_KEY: <API_KEY>
+  MONGODB_URI: <API_KEY>
 
 
 handlers:
