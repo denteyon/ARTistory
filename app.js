@@ -4,8 +4,24 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const Blockchain = require('./blockchain');
+const P2pServer = require('./p2p-server');
+const TransactionPool = require('./wallet/transaction-pool');
+
 var indexRouter = require('./routes/index');
 var imageRouter = require('./routes/images');
+
+// Set up mongoose connection
+var mongoose = require('mongoose');
+var mongoDB = process.env.MONGODB_URI || dev_db_url;
+mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.Promise = global.Promise;
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+const bc = new Blockchain();
+const tp = new TransactionPool();
+const p2pServer = new P2pServer(bc, tp);
 
 var app = express();
 var port = 3000;
@@ -41,6 +57,8 @@ app.use(function(err, req, res, next) {
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
-})
+});
+
+p2pServer.listen();
 
 module.exports = app;

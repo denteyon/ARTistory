@@ -2,10 +2,80 @@
 <html>
   <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
   </head>
+
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <header>
+      <div class="jumbotron" style="background-color:coral">
+        <h1><%= title %></h1>
+        <p>Welcome to <%= title %></p>
+      </div>
+    </header>
+
+    <main>
+      <div class="row align-items-md-stretch">
+        <div class="col-md-6">
+          <div class="jumbotron text-white bg-dark">
+            <form name= "upload_form" method="POST" action="image/upload" enctype="multipart/form-data">
+              <div>
+                <label class=""><em>Upload your own artwork:</em></label>
+                <input type="file" name="artwork" required/>
+              </div>
+              <div>
+                <label><em>Author Name:</em></label>
+                <input type="text" name="author" required/>
+              </div>
+              <div>
+                <label><em>Artwork Title:</em></label>
+                <input type="text" name="title" required/>
+              </div>
+              <div>
+                <input class="btn btn-outline-light" type="submit" name="btn_upload_image" value="UPLOAD" />
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="jumbotron text-white bg-dark">
+            <form method="POST" action="image/check" enctype="multipart/form-data">
+              <div>
+                <label><em>Check an artwork:</em></label>
+                <input type="file" name="checkImg" required/>
+              </div>
+              <div>
+                <input class="btn btn-outline-light" type="submit" name="btn_check_image" value="CHECK" />
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p class="text-center text-muted">© Copyright <script>document.write(new Date().getFullYear());</script> <%= title %></p>
+    </footer>
   </body>
+
+<script>
+  function validateForm() {
+    var x = document.forms["upload_form"]["artwork"].value;
+    var y = document.forms["upload_form"]["author"].value;
+    var z = document.forms["upload_form"]["title"].value;
+    if (x) {
+      alert("Artwork must be uploaded.");
+      return false;
+    }
+    if (y == "") {
+      alert("Author name must be filled out.");
+      return false;
+    }
+    if (z == "") {
+      alert("Artwork title must be filled out.");
+      return false;
+    }
+  }
+</script>
 </html>
