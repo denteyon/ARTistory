@@ -1,45 +1,44 @@
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
-var Art = require('../models/art');
+const deepai = require('deepai');
 
 const uploadedPath = os.tmpdir();
-
-const deepai = require('deepai');
+const Art = require('../models/art');
 
 deepai.setApiKey(process.env.DEEPAI_API_KEY); // May need to change
 
 async function classify(checkImg) {
-    const document_list = await Art.find();
+  const documentList = await Art.find();
 
-    //var filenames = fs.readdirSync(uploadedPath);
+  // const filenames = fs.readdirSync(uploadedPath);
 
-    console.log(document_list);
+  console.log(documentList);
 
-    var min = 100;
+  const min = 100;
 
-    var resultPercentage = 0;
-    var resultFilename = "";
+  const resultPercentage = 0;
+  const resultFilename = '';
 
-    for (const document of document_list) {
-        var name = path.join(uploadedPath+'/'+document.filename);
-        console.log(name);
-        console.log(checkImg);
+  for (const document of documentList) {
+    const name = path.join(uploadedPath + '/' + document.filename);
+    console.log(name);
+    console.log(checkImg);
 
-        const resp = await deepai.callStandardApi("image-similarity", {
-            image1: fs.createReadStream(name),
-            image2: fs.createReadStream(checkImg),
-        })
+    const resp = await deepai.callStandardApi("image-similarity", {
+      image1: fs.createReadStream(name),
+      image2: fs.createReadStream(checkImg),
+    });
 
-        if (resp.output.distance < min) {
-            min = resp.output.distance;
-            resultFilename = document.filename;
-        }
+    if (resp.output.distance < min) {
+      min = resp.output.distance;
+      resultFilename = document.filename;
     }
+  }
 
-    resultPercentage = 100 - min;
+  resultPercentage = 100 - min;
 
-    return [resultFilename, resultPercentage];
+  return [resultFilename, resultPercentage];
 }
 
 exports.classify = classify;

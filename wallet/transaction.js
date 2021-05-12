@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const Chain = require('../util/chain');
 const { MINING_REWARD } = require('../config');
 
@@ -9,18 +10,16 @@ class Transaction {
   }
 
   update(senderWallet, recipient, amount) {
-    const senderOutput = this.outputs.find(output => output.address === senderWallet.publicKey);
+    const senderOutput = this.outputs.find((output) => output.address === senderWallet.publicKey);
 
     if (amount > senderOutput.amount) {
       console.log(`Amount ${amount} exceeds balance.`);
       return;
     }
 
-    senderOutput.amount = senderOutput.amount - amount;
+    senderOutput.amount -= amount;
     this.outputs.push({ amount, address: recipient });
     Transaction.signTransaction(this, senderWallet);
-
-    return this;
   }
 
   static transactionWithOutputs(senderWallet, outputs) {
@@ -34,18 +33,18 @@ class Transaction {
   static newTransaction(senderWallet, recipient, amount) {
     if (amount > senderWallet.balance) {
       console.log(`Amount: ${amount} exceeds balance.`);
-      return;
+      return null;
     }
 
     return Transaction.transactionWithOutputs(senderWallet, [
       { amount: senderWallet.balance - amount, address: senderWallet.publicKey },
-      { amount, address: recipient }
+      { amount, address: recipient },
     ]);
   }
 
   static rewardTransaction(minerWallet, blockchainWallet) {
     return Transaction.transactionWithOutputs(blockchainWallet, [{
-      amount: MINING_REWARD, address: minerWallet.publicKey
+      amount: MINING_REWARD, address: minerWallet.publicKey,
     }]);
   }
 
@@ -54,15 +53,15 @@ class Transaction {
       timestamp: Date.now(),
       amount: senderWallet.balance,
       address: senderWallet.publicKey,
-      signature: senderWallet.sign(Chain.hash(transaction.outputs))
-    }
+      signature: senderWallet.sign(Chain.hash(transaction.outputs)),
+    };
   }
 
   static verifyTransaction(transaction) {
     return Chain.verifySignature(
       transaction.input.address,
       transaction.input.signature,
-      Chain.hash(transaction.outputs)
+      Chain.hash(transaction.outputs),
     );
   }
 }

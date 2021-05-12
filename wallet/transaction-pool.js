@@ -1,4 +1,5 @@
-const Transaction = require('../wallet/transaction');
+/* eslint-disable no-console */
+const Transaction = require('./transaction');
 
 class TransactionPool {
   constructor() {
@@ -6,7 +7,7 @@ class TransactionPool {
   }
 
   updateOrAddTransaction(transaction) {
-    let transactionWithId = this.transactions.find(t => t.id === transaction.id);
+    const transactionWithId = this.transactions.find((t) => t.id === transaction.id);
 
     if (transactionWithId) {
       this.transactions[this.transactions.indexOf(transactionWithId)] = transaction;
@@ -16,23 +17,19 @@ class TransactionPool {
   }
 
   existingTransaction(address) {
-    return this.transactions.find(t => t.input.address === address);
+    return this.transactions.find((t) => t.input.address === address);
   }
 
   validTransactions() {
-    return this.transactions.filter(transaction => {
-      const outputTotal = transaction.outputs.reduce((total, output) => {
-        return total + output.amount;
-      }, 0);
+    return this.transactions.filter((transaction) => {
+      const outputTotal = transaction.outputs.reduce((total, output) => total + output.amount, 0);
 
       if (transaction.input.amount !== outputTotal) {
         console.log(`Invalid transaction from ${transaction.input.address}.`);
-        return;
       }
 
       if (!Transaction.verifyTransaction(transaction)) {
-        console.log(`Invalid signature from ${transaction.input.address}.`)
-        return;
+        console.log(`Invalid signature from ${transaction.input.address}.`);
       }
 
       return transaction;

@@ -1,7 +1,5 @@
-
 const Chain = require('../util/chain');
 const { DIFFICULTY, MINE_RATE } = require('../config');
-
 
 class Block {
   constructor(timestamp, lastHash, hash, data, nonce, difficulty) {
@@ -48,7 +46,9 @@ class Block {
   }
 
   static blockHash(block) {
-    const { timestamp, lastHash, data, nonce, difficulty } = block;
+    const {
+      timestamp, lastHash, data, nonce, difficulty
+    } = block;
     return Block.hash(timestamp, lastHash, data, nonce, difficulty);
   }
 

@@ -1,14 +1,14 @@
-var crypto = require('crypto');
-var fs = require('fs');
+const crypto = require('crypto');
+const fs = require('fs');
 
 function generateChecksum(filepath, algorithm, encoding) {
-    var img = fs.readFileSync(filepath);
-    let str = img.toString('base64')
-    data = Buffer.from(str, 'base64');
-    return crypto
-        .createHash(algorithm || 'md5')
-        .update(data, 'utf8')
-        .digest(encoding || 'hex');
+  const img = fs.readFileSync(filepath);
+  const str = img.toString('base64');
+  const data = Buffer.from(str, 'base64');
+  return crypto
+    .createHash(algorithm || 'md5')
+    .update(data, 'utf8')
+    .digest(encoding || 'hex');
 }
 
 exports.generateChecksum = generateChecksum;
